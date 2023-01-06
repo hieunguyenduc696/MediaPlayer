@@ -5,25 +5,160 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MediaPlayer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Canvas>
-        <MediaElement MediaOpened="player_MediaOpened" MediaEnded="player_MediaEnded" LoadedBehavior="Manual" Name="player" Width="400" Height="300" Canvas.Left="200" Canvas.Top="7" />
-        <Button x:Name="browseButon" Width="80" Height="35" Content="Browse..." Click="browse_Click" Canvas.Left="223" Canvas.Top="351" HorizontalAlignment="Center" VerticalAlignment="Top"></Button>
+        Title="Media Player"
+        Height="720"
+        Width="1080"
+        MinHeight="450"
+        MinWidth="700"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent"
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <Style x:Key="card" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="Margin" Value="10" />
+        </Style>
 
-        <Button x:Name="playButton" Width="80" Height="35" Content="Play" Click="playButton_Click" Canvas.Left="341" Canvas.Top="351"></Button>
-        <Button x:Name="stopButton" Width="80" Height="35" Content="Stop" Click="stopButton_Click" Canvas.Left="456" Canvas.Top="346" HorizontalAlignment="Center" VerticalAlignment="Top"></Button>
+        <Style x:Key="time" TargetType="TextBox">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
-        <TextBox x:Name="currentPosition" d:Text="1:23" Text="0:00" Canvas.Left="203" Canvas.Top="315" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <Slider x:Name="progressSlider" ValueChanged="progressSlider_ValueChanged" Width="311" Height="30" Canvas.Left="243" Canvas.Top="316" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" >
-            <Slider.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="0.036"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Slider.RenderTransform>
-        </Slider>
-        <TextBox x:Name="totalPosition" d:Text="1:23" Text="0:00" Canvas.Left="553" Canvas.Top="315" HorizontalAlignment="Left" VerticalAlignment="Top" />
-    </Canvas>
+        <Style x:Key="playButton" TargetType="Button">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="25">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border CornerRadius="25" Background="#2a213a">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="mediaButton" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="20">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border CornerRadius="20" Background="#2a213a">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Border Padding="10">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#2a213a" Offset="0.0" />
+                <GradientStop Color="#170f23" Offset="0.5" />
+                <GradientStop Color="#9b4de0" Offset="1.0" />
+            </LinearGradientBrush>
+        </Border.Background>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="75" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Background="#34224f" Opacity="0.7" Style="{StaticResource card}">
+                <TextBlock>hello</TextBlock>
+            </Border>
+            <DockPanel Grid.Column="1">
+                <Border DockPanel.Dock="Bottom" Background="#34224f" Opacity="0.7" Height="110" Style="{StaticResource card}">
+                    <StackPanel>
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="50" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" x:Name="currentPosition" d:Text="1:23" Text="0:00" Foreground="White" HorizontalAlignment="Center" />
+                            <Slider Grid.Column="1" x:Name="progressSlider" ValueChanged="progressSlider_ValueChanged" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Center" >
+                                <Slider.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform Angle="0.036"/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Slider.RenderTransform>
+                            </Slider>
+                            <TextBlock Grid.Column="2" x:Name="totalPosition" d:Text="1:23" Text="0:00" Foreground="White" HorizontalAlignment="Center"/>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button x:Name="prevButton" Style="{StaticResource mediaButton}">
+                                <Image x:Name="prevButtonImage" Source="/Icons/prev.png"/>
+                            </Button>
+                            <Button x:Name="playButton" Click="playButton_Click" Style="{StaticResource playButton}">
+                                <Image x:Name="playButtonImage" Source="/Icons/play.png"/>
+                            </Button>
+                            <Button x:Name="nextButton" Style="{StaticResource mediaButton}">
+                                <Image x:Name="nextButtonImage" Source="/Icons/next.png"/>
+                            </Button>
+                            <!--<Button x:Name="stopButton" Width="80" Height="35" Content="Stop" Click="stopButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top"></Button>-->
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <Border Background="#34224f" Opacity="0.7" Style="{StaticResource card}">
+                    <MediaElement Name="player" MediaOpened="player_MediaOpened" MediaEnded="player_MediaEnded" LoadedBehavior="Manual" Width="auto" Height="auto" />
+                </Border>
+            </DockPanel>
+            <Border Grid.Column="2" Background="#34224f" Opacity="0.7" Style="{StaticResource card}">
+                <StackPanel>
+                    <TextBlock>alo</TextBlock>
+                    <Button x:Name="browseButon" Width="80" Height="35" Content="Browse..." Click="browse_Click" HorizontalAlignment="Left" VerticalAlignment="Top"></Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+    </Border>
 </Window>

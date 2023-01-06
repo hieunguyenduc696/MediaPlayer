@@ -40,3 +40,8 @@ D:\Code\Study\22_23_HKI\Window\project_2\MediaPlayer\MediaPlayer\obj\Debug\net6.
 D:\Code\Study\22_23_HKI\Window\project_2\MediaPlayer\MediaPlayer\obj\Debug\net6.0-windows\MediaPlayer.pdb
 D:\Code\Study\22_23_HKI\Window\project_2\MediaPlayer\MediaPlayer\obj\Debug\net6.0-windows\MediaPlayer.genruntimeconfig.cache
 D:\Code\Study\22_23_HKI\Window\project_2\MediaPlayer\MediaPlayer\obj\Debug\net6.0-windows\ref\MediaPlayer.dll
+D:\Code\Study\22_23_HKI\Window\project_2\MediaPlayer\MediaPlayer\bin\Debug\net6.0-windows\Icons\next.png
+D:\Code\Study\22_23_HKI\Window\project_2\MediaPlayer\MediaPlayer\bin\Debug\net6.0-windows\Icons\pause.png
+D:\Code\Study\22_23_HKI\Window\project_2\MediaPlayer\MediaPlayer\bin\Debug\net6.0-windows\Icons\play.png
+D:\Code\Study\22_23_HKI\Window\project_2\MediaPlayer\MediaPlayer\bin\Debug\net6.0-windows\Icons\prev.png
+D:\Code\Study\22_23_HKI\Window\project_2\MediaPlayer\MediaPlayer\obj\Debug\net6.0-windows\MediaPlayer_Content.g.cs

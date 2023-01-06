@@ -16,6 +16,8 @@ using Microsoft.Win32;
 using System.IO;
 using System.Timers;
 using System.Windows.Threading;
+using System.Reflection;
+using Path = System.IO.Path;
 
 namespace MediaPlayer
 {
@@ -41,6 +43,17 @@ namespace MediaPlayer
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            string path = Path.GetFullPath(@"Icons");
+            var bitmapPlay = new BitmapImage(new Uri(path + "\\play.png", UriKind.Absolute));
+            playButtonImage.Source = bitmapPlay;
+            var bitmapPrev = new BitmapImage(new Uri(path + "\\prev.png", UriKind.Absolute));
+            prevButtonImage.Source = bitmapPrev;
+            var bitmapNext = new BitmapImage(new Uri(path + "\\next.png", UriKind.Absolute));
+            nextButtonImage.Source = bitmapNext;
         }
 
         DispatcherTimer _timer;
@@ -73,17 +86,23 @@ namespace MediaPlayer
         {
             if (_playing)
             {
+                string path = Path.GetFullPath(@"Icons");
+                var bitmap = new BitmapImage(new Uri(path + "\\play.png", UriKind.Absolute));
+                playButtonImage.Source = bitmap;
+
                 player.Pause();
                 _playing = false;
-                playButton.Content = "Play";
                 Title = $"Stop playing: {_shortName}";
                 _timer.Stop();
             }
             else
             {
+                string path = Path.GetFullPath(@"Icons");
+                var bitmap = new BitmapImage(new Uri(path + "\\pause.png", UriKind.Absolute));
+                playButtonImage.Source = bitmap;
+
                 _playing = true;
                 player.Play();
-                playButton.Content = "Pause";
                 Title = $"Playing: {_shortName}";
                 _timer.Start();
             }
