@@ -18,6 +18,7 @@ using System.Timers;
 using System.Windows.Threading;
 using System.Reflection;
 using Path = System.IO.Path;
+using System.Windows.Controls.Primitives;
 
 namespace MediaPlayer
 {
@@ -30,6 +31,14 @@ namespace MediaPlayer
 
         private bool _playing = false;
 
+        private bool _dragStarted = false;
+
+        private double _volumeOld = 1;
+
+        private double _volume = 1;
+
+        private bool _muted = false;
+
         private string _shortName
         {
             get
@@ -40,6 +49,7 @@ namespace MediaPlayer
                 return name;
             }
         }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -54,6 +64,11 @@ namespace MediaPlayer
             prevButtonImage.Source = bitmapPrev;
             var bitmapNext = new BitmapImage(new Uri(path + "\\next.png", UriKind.Absolute));
             nextButtonImage.Source = bitmapNext;
+            var bitmapVolume = new BitmapImage(new Uri(path + "\\volume.png", UriKind.Absolute));
+            volumeButtonImage.Source = bitmapVolume;
+
+            volumeSlider.Value = _volume * 100;
+            player.Volume = _volume;
         }
 
         DispatcherTimer _timer;
@@ -65,7 +80,7 @@ namespace MediaPlayer
             {
                 _currentPlaying = screen.FileName;
 
-                this.Title = $"Opened: {_shortName}";
+                //this.Title = $"Opened: {_shortName}";
                 player.Source = new Uri(_currentPlaying, UriKind.Absolute);
 
                 _timer = new DispatcherTimer();
@@ -73,13 +88,16 @@ namespace MediaPlayer
                 _timer.Tick += _timer_Tick;
             }
         }
+
         private void _timer_Tick(object? sender, EventArgs e)
         {
-            int hours = player.Position.Hours;
-            int minutes = player.Position.Minutes;
-            int seconds = player.Position.Seconds;
+            string hours = player.Position.Hours.ToString();
+            string minutes = player.Position.Minutes.ToString();
+            string seconds = player.Position.Seconds.ToString();
+            if (hours.Length == 1) hours = "0" + hours;
+            if (minutes.Length == 1) minutes = "0" + minutes;
+            if (seconds.Length == 1) seconds = "0" + seconds;
             currentPosition.Text = $"{hours}:{minutes}:{seconds}";
-            Title = $"{hours}:{minutes}:{seconds}";
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
@@ -92,7 +110,7 @@ namespace MediaPlayer
 
                 player.Pause();
                 _playing = false;
-                Title = $"Stop playing: {_shortName}";
+                //Title = $"Stop playing: {_shortName}";
                 _timer.Stop();
             }
             else
@@ -103,7 +121,7 @@ namespace MediaPlayer
 
                 _playing = true;
                 player.Play();
-                Title = $"Playing: {_shortName}";
+                //Title = $"Playing: {_shortName}";
                 _timer.Start();
             }
         }
@@ -111,30 +129,86 @@ namespace MediaPlayer
         private void stopButton_Click(object sender, RoutedEventArgs e)
         {
             player.Stop();
-            Title = $"Stop playing: {_shortName}";
+            //Title = $"Stop playing: {_shortName}";
             _playing = false;
         }
 
         private void player_MediaOpened(object sender, RoutedEventArgs e)
         {
-            int hours = player.Position.Hours;
-            int minutes = player.Position.Minutes;
-            int seconds = player.Position.Seconds;
-            totalPosition.Text = $"{hours}:{minutes}:{seconds}";
+            totalPosition.Text = player.NaturalDuration.ToString();
 
             progressSlider.Maximum = player.NaturalDuration.TimeSpan.TotalSeconds;
-        }
-
-        private void progressSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            double value = progressSlider.Value;
-            TimeSpan newPosition = TimeSpan.FromSeconds(value);
-            player.Position = newPosition;
         }
 
         private void player_MediaEnded(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void progressSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!_dragStarted)
+            {
+                double value = progressSlider.Value;
+                TimeSpan newPosition = TimeSpan.FromSeconds(value);
+                player.Position = newPosition;
+            }
+        }
+
+        private void progressSlider_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            this._dragStarted = true;
+        }
+
+        private void progressSlider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            double value = progressSlider.Value;
+            TimeSpan newPosition = TimeSpan.FromSeconds(value);
+            player.Position = newPosition;
+            this._dragStarted = false;
+        }
+
+        private void volumeButton_Click(object sender, RoutedEventArgs e)
+        {
+            string path = Path.GetFullPath(@"Icons");
+            if (_muted)
+            {
+                var bitmap = new BitmapImage(new Uri(path + "\\volume.png", UriKind.Absolute));
+                volumeButtonImage.Source = bitmap;
+                volumeSlider.Value = _volumeOld;
+                _muted = false;
+            }
+            else
+            {
+                _volumeOld = volumeSlider.Value;
+                var bitmap = new BitmapImage(new Uri(path + "\\muted.png", UriKind.Absolute));
+                volumeButtonImage.Source = bitmap;
+                volumeSlider.Value = 0;
+                _muted = true;
+            }
+            player.Volume = volumeSlider.Value / 100;
+        }
+
+        private void volumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            string path = Path.GetFullPath(@"Icons");
+            if (volumeSlider.Value == 0)
+            {
+                var bitmap = new BitmapImage(new Uri(path + "\\muted.png", UriKind.Absolute));
+                volumeButtonImage.Source = bitmap;
+                _muted = true;
+            }
+            else
+            {
+                if (_muted)
+                {
+                    var bitmap = new BitmapImage(new Uri(path + "\\volume.png", UriKind.Absolute));
+                    volumeButtonImage.Source = bitmap;
+                    _muted = false;
+                }
+                _volume = volumeSlider.Value;
+            }
+            player.Volume = volumeSlider.Value / 100;
         }
     }
 }
