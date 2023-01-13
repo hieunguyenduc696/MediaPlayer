@@ -118,47 +118,59 @@
             <Border Grid.Column="1" Background="#34224f" Opacity="0.7" Style="{StaticResource card}">
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Top">
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="browseButon" Width="80" Height="35" Content="Browse..." Click="browse_Click" HorizontalAlignment="Left" VerticalAlignment="Top"></Button>
-                            <Button Click="NewPlayList_Click">New Playlist</Button>
-                        </StackPanel>
+                        <DockPanel Margin="3">
+                            <!--<Button x:Name="browseButon" Width="80" Height="35" Content="Browse..." Click="browse_Click" HorizontalAlignment="Left" VerticalAlignment="Top"></Button>-->
+                            <Button DockPanel.Dock="Right" Click="NewPlayList_Click" Style="{StaticResource mediaButton}" Margin="0">
+                                <Image x:Name="addPlaylistButtonImage" Source="/Icons/add_playlist.png"/>
+                            </Button>
+                            <TextBlock Padding="5 5 5 5" FontSize="18" Foreground="White" VerticalAlignment="Center">Your playlists</TextBlock>
+                        </DockPanel>
                         
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Padding="5 5 5 5">Your playlists</TextBlock>
-                            <ComboBox Name="ListPlaylist" Width="180" Margin="5 0 5 0" SelectionChanged="ListPlayList_SelectionChanged"></ComboBox>
-                        </StackPanel>
+                        <DockPanel Margin="3">
+                            <!--<TextBlock Padding="5 5 5 5">Your playlists</TextBlock>-->
+
+                            <StackPanel DockPanel.Dock="Right" Name="UtilPanel" Orientation="Horizontal">
+                                <Button Name="AddNewMediaBtn" Click="AddItem_Click" Style="{StaticResource mediaButtonSmall}">
+                                    <Image x:Name="addMediaButtonImage" Source="/Icons/add_media.png"/>
+                                </Button>
+                                <Button Name="DeletePlaylistBtn" Click="DeletePlayList_Click" Style="{StaticResource mediaButtonSmall}">
+                                    <Image x:Name="deletePlaylistButtonImage" Source="/Icons/trash_bin.png" Margin="2"/>
+                                </Button>
+                            </StackPanel>
+                            <ComboBox Style="{DynamicResource listPlaylistComboBoxStyle}"
+                                Name="ListPlaylist"
+                                FontSize="16"
+                                VerticalContentAlignment="Center"
+                                SelectionChanged="ListPlayList_SelectionChanged" BorderBrush="{x:Null}" Foreground="White"
+                            />
+                        </DockPanel>
                     </StackPanel>
-                    <StackPanel Name="UtilPanel" DockPanel.Dock="Bottom" Orientation="Horizontal">
-                        <Button Name="AddNewMediaBtn" Click="AddItem_Click">Add new media item</Button>
-                        <Button Name="DeletePlaylistBtn" Click="DeletePlayList_Click">Delete Playlist</Button>
-                    </StackPanel>
-                    <ListView Name="ListMediaItem" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="MediaItem_Changed">
-                        <!--<ListView.Resources>
-                            <ContextMenu x:Key="mediaItemContextMenu">
-                                <MenuItem Header="Delete" Click="removeMediaItem_Click"></MenuItem>
-                            </ContextMenu>
-                        </ListView.Resources>
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListViewItem}">
-                                <Setter Property="ContextMenu" Value="{StaticResource mediaItemContextMenu}"></Setter>
-                            </Style>
-                        </ListView.ItemContainerStyle>-->
+                    <ListView
+                        Name="ListMediaItem"
+                        ScrollViewer.CanContentScroll="True"
+                        ScrollViewer.VerticalScrollBarVisibility="Visible"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        SelectionChanged="MediaItem_Changed"
+                        Background="Transparent"
+                        BorderThickness="0"
+                    >
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Width="180">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{Binding Name}" Margin="0 2 0 0" Grid.Column="0">
-                                        <TextBlock.ToolTip>
-                                            <ToolTip>
-                                                <TextBlock Text="{Binding Name}"></TextBlock>
-                                            </ToolTip>
-                                        </TextBlock.ToolTip>
-                                </TextBlock>
-                                <Button Click="removeMediaItem_Click" Grid.Column="1" Margin="0 0 0 0">Remove</Button>
-                                </Grid>
+                                <Border Background="#2a213a" CornerRadius="5" Margin="0 2 0 2">
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Right" Click="removeMediaItem_Click" Style="{StaticResource mediaButtonTiny}">
+                                            <!--<Image x:Name="deleteMediaButtonImage" Source="Icons/delete.png"/>-->
+                                            x
+                                        </Button>
+                                        <TextBlock Text="{Binding Name}" Foreground="White" FontSize="16" Margin="5">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip>
+                                                    <TextBlock Text="{Binding Name}" />
+                                                </ToolTip>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </DockPanel>
+                                </Border>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>

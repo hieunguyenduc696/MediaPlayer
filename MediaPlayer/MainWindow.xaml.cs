@@ -105,6 +105,12 @@ namespace MediaPlayer
             volumeButtonImage.Source = bitmapVolume;
             var bitmapShuffle = new BitmapImage(new Uri(path + "\\shuffle.png", UriKind.Absolute));
             shuffleButtonImage.Source = bitmapShuffle;
+            var bitmapAddPlaylist = new BitmapImage(new Uri(path + "\\add_playlist.png", UriKind.Absolute));
+            addPlaylistButtonImage.Source = bitmapAddPlaylist;
+            var bitmapAddMedia = new BitmapImage(new Uri(path + "\\add_media.png", UriKind.Absolute));
+            addMediaButtonImage.Source = bitmapAddMedia;
+            var bitmapTrashBin = new BitmapImage(new Uri(path + "\\trash_bin.png", UriKind.Absolute));
+            deletePlaylistButtonImage.Source = bitmapTrashBin;
 
             volumeSlider.Value = _volume * 100;
             player.Volume = _volume;
