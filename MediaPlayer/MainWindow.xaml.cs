@@ -60,48 +60,6 @@ namespace MediaPlayer
             }
         }
 
-        //public class PlayKey : ICommand
-        //{
-        //    public event EventHandler? CanExecuteChanged;
-
-        //    public bool CanExecute(object? parameter)
-        //    {
-        //        return true;
-        //    }
-
-        //    public void Execute(object? parameter)
-        //    {
-        //        playMedia();
-        //    }
-        //}
-
-        public class MuteKey : ICommand
-        {
-            public event EventHandler? CanExecuteChanged;
-
-            public bool CanExecute(object? parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object? parameter)
-            {
-                MessageBox.Show("success");
-            }
-        }
-
-        public class CommandContext
-        {
-            //public ICommand PlayCommand
-            //{
-            //    get { return new PlayKey(); }
-            //}
-            public ICommand MuteCommand
-            {
-                get { return new MuteKey(); }
-            }
-        }
-
         public static RoutedCommand PLayCommand = new RoutedCommand();
 
         public static RoutedCommand MuteCommand = new RoutedCommand();
