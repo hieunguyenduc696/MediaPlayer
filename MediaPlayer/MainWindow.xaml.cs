@@ -61,7 +61,8 @@ namespace MediaPlayer
         }
 
         public static RoutedCommand PLayCommand = new RoutedCommand();
-
+        public static RoutedCommand PrevCommand = new RoutedCommand();
+        public static RoutedCommand NextCommand = new RoutedCommand();
         public static RoutedCommand MuteCommand = new RoutedCommand();
 
         public MainWindow()
@@ -70,6 +71,8 @@ namespace MediaPlayer
             this.DataContext = this;
 
             this.CommandBindings.Add(new CommandBinding(PLayCommand));
+            this.CommandBindings.Add(new CommandBinding(PrevCommand));
+            this.CommandBindings.Add(new CommandBinding(NextCommand));
             this.CommandBindings.Add(new CommandBinding(MuteCommand));
         }
 
@@ -440,39 +443,65 @@ namespace MediaPlayer
 
             if (cur != null)
             {
-                curPlayListName = cur;
                 ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists[cur].Items.OrderBy(x => random.Next()).ToList());
-
+                ListMediaItem.SelectedIndex = 0;
             }
             else
             {
                 ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists["Recent"].Items.OrderBy(x => random.Next()).ToList());
-                curPlayListName = "Recent";
+                ListMediaItem.SelectedIndex = 0;
             }
+        }
+
+        private void prevMedia()
+        {
+            int index = ListMediaItem.SelectedIndex - 1;
+            if (index < 0) return;
+            ListMediaItem.SelectedIndex = index;
+        }
+
+        private void nextMedia()
+        {
+            int length = ListMediaItem.Items.Count;
+            int index = ListMediaItem.SelectedIndex + 1;
+            if (index == length) return;
+            ListMediaItem.SelectedIndex = index;
         }
 
         private void prevButton_Click(object sender, RoutedEventArgs e)
         {
-            int length = ListMediaItem.Items.Count;
-            int index = ListMediaItem.SelectedIndex - 1;
-            if (index < 0) index = length - 1;
-            ListMediaItem.SelectedIndex = index;
-            Title = $"{index}";
+            prevMedia();
         }
 
         private void nextButton_Click(object sender, RoutedEventArgs e)
         {
-            int length = ListMediaItem.Items.Count;
-            int index = ListMediaItem.SelectedIndex + 1;
-            if (index == length) index = 0;
-            ListMediaItem.SelectedIndex = index;
-            Title = $"{index}";
+            nextMedia();
         }
 
         private void player_Loaded(object sender, RoutedEventArgs e)
         {
             player.Play();
             player.Pause();
+        }
+
+        private void prevCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void prevCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            prevMedia();
+        }
+
+        private void nextCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void nextCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            nextMedia();
         }
     }
 }

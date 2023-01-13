@@ -15,12 +15,16 @@
         Loaded="Window_Loaded">
     <Window.CommandBindings>
         <CommandBinding x:Name="playCommand" Command="{x:Static local:MainWindow.PLayCommand}" CanExecute="playCommand_CanExecute" Executed="playCommand_Executed"/>
+        <CommandBinding x:Name="prevCommand" Command="{x:Static local:MainWindow.PrevCommand}" CanExecute="prevCommand_CanExecute" Executed="prevCommand_Executed"/>
+        <CommandBinding x:Name="nextCommand" Command="{x:Static local:MainWindow.NextCommand}" CanExecute="nextCommand_CanExecute" Executed="nextCommand_Executed"/>
         <CommandBinding x:Name="muteCommand" Command="{x:Static local:MainWindow.MuteCommand}" CanExecute="muteCommand_CanExecute" Executed="muteCommand_Executed"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Modifiers="" Key="K" Command="{x:Static local:MainWindow.PLayCommand}" />
         <KeyBinding Modifiers="" Key="Space" Command="{x:Static local:MainWindow.PLayCommand}" />
         <KeyBinding Modifiers="" Key="M" Command="{x:Static local:MainWindow.MuteCommand}" />
+        <KeyBinding Modifiers="Ctrl" Key="Left" Command="{x:Static local:MainWindow.PrevCommand}" />
+        <KeyBinding Modifiers="Ctrl" Key="Right" Command="{x:Static local:MainWindow.NextCommand}" />
     </Window.InputBindings>
     <Border Padding="10">
         <Border.Background>
@@ -70,18 +74,18 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
-                                <Button x:Name="shuffleButton" Click="shuffleButton_Click" Style="{StaticResource mediaButton}">
+                                <Button x:Name="shuffleButton" Click="shuffleButton_Click" Style="{StaticResource mediaButton}" ToolTip="Shuffle">
                                     <Image x:Name="shuffleButtonImage" Source="/Icons/shuffle.png"/>
                                 </Button>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button x:Name="prevButton" Click="prevButton_Click" Style="{StaticResource mediaButton}">
+                                <Button x:Name="prevButton" Click="prevButton_Click" Style="{StaticResource mediaButton}" ToolTip="Previous (Ctrl + Left)">
                                     <Image x:Name="prevButtonImage" Source="/Icons/prev.png"/>
                                 </Button>
                                 <Button x:Name="playButton" Click="playButton_Click" Style="{StaticResource playButton}" ToolTip="Play (k)">
                                     <Image x:Name="playButtonImage" Source="/Icons/play.png"/>
                                 </Button>
-                                <Button x:Name="nextButton" Click="nextButton_Click" Style="{StaticResource mediaButton}">
+                                <Button x:Name="nextButton" Click="nextButton_Click" Style="{StaticResource mediaButton}" ToolTip="Next (Ctrl + Right)">
                                     <Image x:Name="nextButtonImage" Source="/Icons/next.png"/>
                                 </Button>
                             </StackPanel>
@@ -120,7 +124,7 @@
                     <StackPanel DockPanel.Dock="Top">
                         <DockPanel Margin="3">
                             <!--<Button x:Name="browseButon" Width="80" Height="35" Content="Browse..." Click="browse_Click" HorizontalAlignment="Left" VerticalAlignment="Top"></Button>-->
-                            <Button DockPanel.Dock="Right" Click="NewPlayList_Click" Style="{StaticResource mediaButton}" Margin="0">
+                            <Button DockPanel.Dock="Right" Click="NewPlayList_Click" Style="{StaticResource mediaButton}" Margin="0" ToolTip="New playlist">
                                 <Image x:Name="addPlaylistButtonImage" Source="/Icons/add_playlist.png"/>
                             </Button>
                             <TextBlock Padding="5 5 5 5" FontSize="18" Foreground="White" VerticalAlignment="Center">Your playlists</TextBlock>
@@ -130,10 +134,10 @@
                             <!--<TextBlock Padding="5 5 5 5">Your playlists</TextBlock>-->
 
                             <StackPanel DockPanel.Dock="Right" Name="UtilPanel" Orientation="Horizontal">
-                                <Button Name="AddNewMediaBtn" Click="AddItem_Click" Style="{StaticResource mediaButtonSmall}">
+                                <Button Name="AddNewMediaBtn" Click="AddItem_Click" Style="{StaticResource mediaButtonSmall}" ToolTip="Add file">
                                     <Image x:Name="addMediaButtonImage" Source="/Icons/add_media.png"/>
                                 </Button>
-                                <Button Name="DeletePlaylistBtn" Click="DeletePlayList_Click" Style="{StaticResource mediaButtonSmall}">
+                                <Button Name="DeletePlaylistBtn" Click="DeletePlayList_Click" Style="{StaticResource mediaButtonSmall}" ToolTip="Delete playlist">
                                     <Image x:Name="deletePlaylistButtonImage" Source="/Icons/trash_bin.png" Margin="2"/>
                                 </Button>
                             </StackPanel>
@@ -158,7 +162,7 @@
                             <DataTemplate>
                                 <Border Background="#2a213a" CornerRadius="5" Margin="0 2 0 2">
                                     <DockPanel>
-                                        <Button DockPanel.Dock="Right" Click="removeMediaItem_Click" Style="{StaticResource mediaButtonTiny}">
+                                        <Button DockPanel.Dock="Right" Click="removeMediaItem_Click" Style="{StaticResource mediaButtonTiny}" ToolTip="Remove">
                                             <!--<Image x:Name="deleteMediaButtonImage" Source="Icons/delete.png"/>-->
                                             x
                                         </Button>
