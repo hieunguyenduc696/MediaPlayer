@@ -13,8 +13,15 @@
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         Loaded="Window_Loaded">
-    <Window.Resources>
-    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding x:Name="playCommand" Command="{x:Static local:MainWindow.PLayCommand}" CanExecute="playCommand_CanExecute" Executed="playCommand_Executed"/>
+        <CommandBinding x:Name="muteCommand" Command="{x:Static local:MainWindow.MuteCommand}" CanExecute="muteCommand_CanExecute" Executed="muteCommand_Executed"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Modifiers="" Key="K" Command="{x:Static local:MainWindow.PLayCommand}" />
+        <KeyBinding Modifiers="" Key="Space" Command="{x:Static local:MainWindow.PLayCommand}" />
+        <KeyBinding Modifiers="" Key="M" Command="{x:Static local:MainWindow.MuteCommand}" />
+    </Window.InputBindings>
     <Border Padding="10">
         <Border.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -66,7 +73,7 @@
                                 <Button x:Name="prevButton" Style="{StaticResource mediaButton}">
                                     <Image x:Name="prevButtonImage" Source="/Icons/prev.png"/>
                                 </Button>
-                                <Button x:Name="playButton" Click="playButton_Click" Style="{StaticResource playButton}">
+                                <Button x:Name="playButton" Click="playButton_Click" Style="{StaticResource playButton}" ToolTip="Play (k)">
                                     <Image x:Name="playButtonImage" Source="/Icons/play.png"/>
                                 </Button>
                                 <Button x:Name="nextButton" Style="{StaticResource mediaButton}">
@@ -78,6 +85,7 @@
                                     x:Name="volumeButton"
                                     Style="{StaticResource mediaButtonSmall}"
                                     Click="volumeButton_Click"
+                                    ToolTip="Mute (m)"
                                 >
                                     <Image x:Name="volumeButtonImage" Source="/Icons/volume.png"/>
                                 </Button>

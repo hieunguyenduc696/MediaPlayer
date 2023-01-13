@@ -50,9 +50,59 @@ namespace MediaPlayer
             }
         }
 
+        //public class PlayKey : ICommand
+        //{
+        //    public event EventHandler? CanExecuteChanged;
+
+        //    public bool CanExecute(object? parameter)
+        //    {
+        //        return true;
+        //    }
+
+        //    public void Execute(object? parameter)
+        //    {
+        //        playMedia();
+        //    }
+        //}
+
+        public class MuteKey : ICommand
+        {
+            public event EventHandler? CanExecuteChanged;
+
+            public bool CanExecute(object? parameter)
+            {
+                return true;
+            }
+
+            public void Execute(object? parameter)
+            {
+                MessageBox.Show("success");
+            }
+        }
+
+        public class CommandContext
+        {
+            //public ICommand PlayCommand
+            //{
+            //    get { return new PlayKey(); }
+            //}
+            public ICommand MuteCommand
+            {
+                get { return new MuteKey(); }
+            }
+        }
+
+        public static RoutedCommand PLayCommand = new RoutedCommand();
+
+        public static RoutedCommand MuteCommand = new RoutedCommand();
+
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
+
+            this.CommandBindings.Add(new CommandBinding(PLayCommand));
+            this.CommandBindings.Add(new CommandBinding(MuteCommand));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -100,30 +150,38 @@ namespace MediaPlayer
             currentPosition.Text = $"{hours}:{minutes}:{seconds}";
         }
 
+        private void playMedia()
+        {
+            if (!string.IsNullOrEmpty(_currentPlaying))
+            {
+                if (_playing)
+                {
+                    string path = Path.GetFullPath(@"Icons");
+                    var bitmap = new BitmapImage(new Uri(path + "\\play.png", UriKind.Absolute));
+                    playButtonImage.Source = bitmap;
+                    playButton.ToolTip = "Play (k)";
+                    player.Pause();
+                    _playing = false;
+                    //Title = $"Stop playing: {_shortName}";
+                    _timer.Stop();
+                }
+                else
+                {
+                    string path = Path.GetFullPath(@"Icons");
+                    var bitmap = new BitmapImage(new Uri(path + "\\pause.png", UriKind.Absolute));
+                    playButtonImage.Source = bitmap;
+                    playButton.ToolTip = "Pause (k)";
+                    _playing = true;
+                    player.Play();
+                    //Title = $"Playing: {_shortName}";
+                    _timer.Start();
+                }
+            }
+        }
+
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_playing)
-            {
-                string path = Path.GetFullPath(@"Icons");
-                var bitmap = new BitmapImage(new Uri(path + "\\play.png", UriKind.Absolute));
-                playButtonImage.Source = bitmap;
-
-                player.Pause();
-                _playing = false;
-                //Title = $"Stop playing: {_shortName}";
-                _timer.Stop();
-            }
-            else
-            {
-                string path = Path.GetFullPath(@"Icons");
-                var bitmap = new BitmapImage(new Uri(path + "\\pause.png", UriKind.Absolute));
-                playButtonImage.Source = bitmap;
-
-                _playing = true;
-                player.Play();
-                //Title = $"Playing: {_shortName}";
-                _timer.Start();
-            }
+            playMedia();
         }
 
         private void stopButton_Click(object sender, RoutedEventArgs e)
@@ -168,13 +226,14 @@ namespace MediaPlayer
             this._dragStarted = false;
         }
 
-        private void volumeButton_Click(object sender, RoutedEventArgs e)
+        private void muteMedia()
         {
             string path = Path.GetFullPath(@"Icons");
             if (_muted)
             {
                 var bitmap = new BitmapImage(new Uri(path + "\\volume.png", UriKind.Absolute));
                 volumeButtonImage.Source = bitmap;
+                volumeButton.ToolTip = "Mute (m)";
                 volumeSlider.Value = _volumeOld;
                 _muted = false;
             }
@@ -183,10 +242,16 @@ namespace MediaPlayer
                 _volumeOld = volumeSlider.Value;
                 var bitmap = new BitmapImage(new Uri(path + "\\muted.png", UriKind.Absolute));
                 volumeButtonImage.Source = bitmap;
+                volumeButton.ToolTip = "Unmute (m)";
                 volumeSlider.Value = 0;
                 _muted = true;
             }
             player.Volume = volumeSlider.Value / 100;
+        }
+
+        private void volumeButton_Click(object sender, RoutedEventArgs e)
+        {
+            muteMedia();
         }
 
         private void volumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -209,6 +274,26 @@ namespace MediaPlayer
                 _volume = volumeSlider.Value;
             }
             player.Volume = volumeSlider.Value / 100;
+        }
+
+        private void playCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void playCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            playMedia();
+        }
+
+        private void muteCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void muteCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            muteMedia();
         }
     }
 }
