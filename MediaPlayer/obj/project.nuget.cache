@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "ndyvrQo2ljqX46P2c5Z9Lf95owye22trKWCc3upl8/x58e+XpXXW54Kq27Rpr8NwTyDerW7NbNJuoZkRQHO6vQ==",
+  "dgSpecHash": "I7A73BNUH4RebXeAO+VtKZ4yd/twKacuXiaVDh0pwZgN1yG3U6uNoSb1zOuWmlf7LJzCda1AeGJoee9na1rR8g==",
   "success": true,
   "projectFilePath": "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\MediaPlayer.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\MiHi\\.nuget\\packages\\fody\\6.6.4\\fody.6.6.4.nupkg.sha512",
+    "C:\\Users\\MiHi\\.nuget\\packages\\propertychanged.fody\\4.1.0\\propertychanged.fody.4.1.0.nupkg.sha512"
+  ],
   "logs": []
 }
