@@ -9,7 +9,7 @@
         Height="720"
         Width="1080"
         MinHeight="450"
-        MinWidth="1000"
+        MinWidth="900"
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         Loaded="Window_Loaded">
@@ -32,14 +32,14 @@
         </Border.Background>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="75" />
+                <!--<ColumnDefinition Width="75" />-->
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" Background="#34224f" Opacity="0.7" Style="{StaticResource card}">
+            <!--<Border Grid.Column="0" Background="#34224f" Opacity="0.7" Style="{StaticResource card}">
                 <TextBlock>hello</TextBlock>
-            </Border>
-            <DockPanel Grid.Column="1">
+            </Border>-->
+            <DockPanel Grid.Column="0">
                 <Border DockPanel.Dock="Bottom" Background="#34224f" Opacity="0.7" Height="115" Style="{StaticResource card}">
                     <StackPanel>
                         <Grid Margin="5">
@@ -69,14 +69,19 @@
                                 <ColumnDefinition Width="2*" />
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                <Button x:Name="shuffleButton" Click="shuffleButton_Click" Style="{StaticResource mediaButton}">
+                                    <Image x:Name="shuffleButtonImage" Source="/Icons/shuffle.png"/>
+                                </Button>
+                            </StackPanel>
                             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button x:Name="prevButton" Style="{StaticResource mediaButton}">
+                                <Button x:Name="prevButton" Click="prevButton_Click" Style="{StaticResource mediaButton}">
                                     <Image x:Name="prevButtonImage" Source="/Icons/prev.png"/>
                                 </Button>
                                 <Button x:Name="playButton" Click="playButton_Click" Style="{StaticResource playButton}" ToolTip="Play (k)">
                                     <Image x:Name="playButtonImage" Source="/Icons/play.png"/>
                                 </Button>
-                                <Button x:Name="nextButton" Style="{StaticResource mediaButton}">
+                                <Button x:Name="nextButton" Click="nextButton_Click" Style="{StaticResource mediaButton}">
                                     <Image x:Name="nextButtonImage" Source="/Icons/next.png"/>
                                 </Button>
                             </StackPanel>
@@ -107,10 +112,10 @@
                     </StackPanel>
                 </Border>
                 <Border Background="#34224f" Opacity="0.7" Style="{StaticResource card}">
-                    <MediaElement Name="player" MediaOpened="player_MediaOpened" MediaEnded="player_MediaEnded" LoadedBehavior="Manual" Width="auto" Height="auto" />
+                    <MediaElement Name="player" MediaOpened="player_MediaOpened" MediaEnded="player_MediaEnded" Loaded="player_Loaded" LoadedBehavior="Manual" Width="auto" Height="auto" />
                 </Border>
             </DockPanel>
-            <Border Grid.Column="2" Background="#34224f" Opacity="0.7" Style="{StaticResource card}">
+            <Border Grid.Column="1" Background="#34224f" Opacity="0.7" Style="{StaticResource card}">
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Top">
                         <StackPanel Orientation="Horizontal">
@@ -124,7 +129,6 @@
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Name="UtilPanel" DockPanel.Dock="Bottom" Orientation="Horizontal">
-                        <Button>Shuffle mode</Button>
                         <Button Name="AddNewMediaBtn" Click="AddItem_Click">Add new media item</Button>
                         <Button Name="DeletePlaylistBtn" Click="DeletePlayList_Click">Delete Playlist</Button>
                     </StackPanel>

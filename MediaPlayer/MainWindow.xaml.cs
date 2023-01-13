@@ -73,7 +73,6 @@ namespace MediaPlayer
             this.CommandBindings.Add(new CommandBinding(MuteCommand));
         }
 
-
         public void configBindingResource()
         {
             _listOfPlaylist = new ObservableCollection<string>();
@@ -90,8 +89,9 @@ namespace MediaPlayer
             ListPlaylist.ItemsSource = _listOfPlaylist;
             ListPlaylist.SelectedIndex = 0;
 
-           ListMediaItem.ItemsSource = _workingMediaItems;
+            ListMediaItem.ItemsSource = _workingMediaItems;
         }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             string path = Path.GetFullPath(@"Icons");
@@ -103,6 +103,8 @@ namespace MediaPlayer
             nextButtonImage.Source = bitmapNext;
             var bitmapVolume = new BitmapImage(new Uri(path + "\\volume.png", UriKind.Absolute));
             volumeButtonImage.Source = bitmapVolume;
+            var bitmapShuffle = new BitmapImage(new Uri(path + "\\shuffle.png", UriKind.Absolute));
+            shuffleButtonImage.Source = bitmapShuffle;
 
             volumeSlider.Value = _volume * 100;
             player.Volume = _volume;
@@ -130,13 +132,16 @@ namespace MediaPlayer
 
         private void _timer_Tick(object? sender, EventArgs e)
         {
-            string hours = player.Position.Hours.ToString();
-            string minutes = player.Position.Minutes.ToString();
-            string seconds = player.Position.Seconds.ToString();
-            if (hours.Length == 1) hours = "0" + hours;
-            if (minutes.Length == 1) minutes = "0" + minutes;
-            if (seconds.Length == 1) seconds = "0" + seconds;
-            currentPosition.Text = $"{hours}:{minutes}:{seconds}";
+            if (!_dragStarted)
+            {
+                string hours = player.Position.Hours.ToString();
+                string minutes = player.Position.Minutes.ToString();
+                string seconds = player.Position.Seconds.ToString();
+                if (hours.Length == 1) hours = "0" + hours;
+                if (minutes.Length == 1) minutes = "0" + minutes;
+                if (seconds.Length == 1) seconds = "0" + seconds;
+                currentPosition.Text = $"{hours}:{minutes}:{seconds}";
+            }
         }
 
         private void playMedia()
@@ -173,16 +178,17 @@ namespace MediaPlayer
             playMedia();
         }
 
-        private void stopButton_Click(object sender, RoutedEventArgs e)
-        {
-            player.Stop();
-            //Title = $"Stop playing: {_shortName}";
-            _playing = false;
-        }
-
         private void player_MediaOpened(object sender, RoutedEventArgs e)
         {
-            totalPosition.Text = player.NaturalDuration.ToString();
+            double total = player.NaturalDuration.TimeSpan.TotalSeconds;
+            string hours = ((int)Math.Floor(total / 3600)).ToString();
+            string minutes = ((int)Math.Floor(total / 60)).ToString();
+            string seconds = ((int)Math.Floor(total) % 60).ToString();
+            if (hours.Length == 1) hours = "0" + hours;
+            if (minutes.Length == 1) minutes = "0" + minutes;
+            if (seconds.Length == 1) seconds = "0" + seconds;
+
+            totalPosition.Text = $"{hours}:{minutes}:{seconds}";
 
             progressSlider.Maximum = player.NaturalDuration.TimeSpan.TotalSeconds;
         }
@@ -200,6 +206,17 @@ namespace MediaPlayer
                 TimeSpan newPosition = TimeSpan.FromSeconds(value);
                 player.Position = newPosition;
             }
+
+            double total = progressSlider.Value;
+            string hours = ((int)Math.Floor(total / 3600)).ToString();
+            string minutes = ((int)Math.Floor(total / 60)).ToString();
+            string seconds = ((int)Math.Floor(total) % 60).ToString();
+            if (hours.Length == 1) hours = "0" + hours;
+            if (minutes.Length == 1) minutes = "0" + minutes;
+            if (seconds.Length == 1) seconds = "0" + seconds;
+
+            currentPosition.Text = $"{hours}:{minutes}:{seconds}";
+
         }
 
         private void progressSlider_DragStarted(object sender, DragStartedEventArgs e)
@@ -212,6 +229,7 @@ namespace MediaPlayer
             double value = progressSlider.Value;
             TimeSpan newPosition = TimeSpan.FromSeconds(value);
             player.Position = newPosition;
+
             this._dragStarted = false;
         }
 
@@ -337,7 +355,7 @@ namespace MediaPlayer
             {
                 curPlayListName = cur;
                 ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists[cur].Items);
-
+                
             }
             else
             {
@@ -365,12 +383,20 @@ namespace MediaPlayer
             {
                 _currentPlaying = cur.Path;
 
-                this.Title = $"Opened: {_shortName}";
+                //this.Title = $"Opened: {_shortName}";
                 player.Source = new Uri(_currentPlaying, UriKind.Absolute);
 
                 _timer = new DispatcherTimer();
                 _timer.Interval = new TimeSpan(0, 0, 0, 1, 0); ;
                 _timer.Tick += _timer_Tick;
+
+                progressSlider.Value = 0;
+                currentPosition.Text = "00:00:00";
+                if (_playing)
+                {
+                    player.Play();
+                    _timer.Start();
+                }
             }
 
         }
@@ -399,6 +425,48 @@ namespace MediaPlayer
             }
 
            
+        }
+
+        private void shuffleButton_Click(object sender, RoutedEventArgs e)
+        {
+            string cur = (string)ListPlaylist.SelectedItem;
+            Random random = new Random();
+
+            if (cur != null)
+            {
+                curPlayListName = cur;
+                ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists[cur].Items.OrderBy(x => random.Next()).ToList());
+
+            }
+            else
+            {
+                ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists["Recent"].Items.OrderBy(x => random.Next()).ToList());
+                curPlayListName = "Recent";
+            }
+        }
+
+        private void prevButton_Click(object sender, RoutedEventArgs e)
+        {
+            int length = ListMediaItem.Items.Count;
+            int index = ListMediaItem.SelectedIndex - 1;
+            if (index < 0) index = length - 1;
+            ListMediaItem.SelectedIndex = index;
+            Title = $"{index}";
+        }
+
+        private void nextButton_Click(object sender, RoutedEventArgs e)
+        {
+            int length = ListMediaItem.Items.Count;
+            int index = ListMediaItem.SelectedIndex + 1;
+            if (index == length) index = 0;
+            ListMediaItem.SelectedIndex = index;
+            Title = $"{index}";
+        }
+
+        private void player_Loaded(object sender, RoutedEventArgs e)
+        {
+            player.Play();
+            player.Pause();
         }
     }
 }
