@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\MediaPlayer.csproj": {}
+    "D:\\srcC#\\FinalProject\\MediaPlayer\\MediaPlayer.csproj": {}
   },
   "projects": {
-    "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\MediaPlayer.csproj": {
+    "D:\\srcC#\\FinalProject\\MediaPlayer\\MediaPlayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\MediaPlayer.csproj",
+        "projectUniqueName": "D:\\srcC#\\FinalProject\\MediaPlayer\\MediaPlayer.csproj",
         "projectName": "MediaPlayer",
-        "projectPath": "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\MediaPlayer.csproj",
-        "packagesPath": "C:\\Users\\MiHi\\.nuget\\packages\\",
-        "outputPath": "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\obj\\",
+        "projectPath": "D:\\srcC#\\FinalProject\\MediaPlayer\\MediaPlayer.csproj",
+        "packagesPath": "C:\\Users\\Tung\\.nuget\\packages\\",
+        "outputPath": "D:\\srcC#\\FinalProject\\MediaPlayer\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\MiHi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Tung\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -39,6 +42,12 @@
       "frameworks": {
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
+          "dependencies": {
+            "PropertyChanged.Fody": {
+              "target": "Package",
+              "version": "[4.1.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

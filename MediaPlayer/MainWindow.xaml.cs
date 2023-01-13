@@ -18,6 +18,10 @@ using System.Timers;
 using System.Windows.Threading;
 using System.Reflection;
 using Path = System.IO.Path;
+using MediaPlayer.Classes;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.ConstrainedExecution;
 
 namespace MediaPlayer
 {
@@ -27,6 +31,12 @@ namespace MediaPlayer
     public partial class MainWindow : Window
     {
         private string _currentPlaying = string.Empty;
+
+        private string curPlayListName;
+        private Dictionary<string,Playlist> playlists = new Dictionary<string, Playlist>();
+
+        private ObservableCollection<string> _listOfPlaylist;
+        private ObservableCollection<MediaItem> _workingMediaItems;
 
         private bool _playing = false;
 
@@ -43,8 +53,28 @@ namespace MediaPlayer
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = this;
         }
 
+
+        public void configBindingResource()
+        {
+            _listOfPlaylist = new ObservableCollection<string>();
+            _workingMediaItems = new ObservableCollection<MediaItem>();
+
+            playlists = FileService.loadPlaylists();
+
+            playlists = FileService.loadPlaylists();
+            _listOfPlaylist = PlaylistService.getListOfPlaylists(playlists);
+
+            _workingMediaItems = new ObservableCollection<MediaItem>(playlists["Recent"].Items);
+            curPlayListName = "Recent";
+
+            ListPlaylist.ItemsSource = _listOfPlaylist;
+            ListPlaylist.SelectedIndex = 0;
+
+           ListMediaItem.ItemsSource = _workingMediaItems;
+        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             string path = Path.GetFullPath(@"Icons");
@@ -54,6 +84,8 @@ namespace MediaPlayer
             prevButtonImage.Source = bitmapPrev;
             var bitmapNext = new BitmapImage(new Uri(path + "\\next.png", UriKind.Absolute));
             nextButtonImage.Source = bitmapNext;
+
+            configBindingResource();
         }
 
         DispatcherTimer _timer;
@@ -84,28 +116,32 @@ namespace MediaPlayer
 
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_playing)
+            if (!(_currentPlaying == null || _currentPlaying == string.Empty))
             {
-                string path = Path.GetFullPath(@"Icons");
-                var bitmap = new BitmapImage(new Uri(path + "\\play.png", UriKind.Absolute));
-                playButtonImage.Source = bitmap;
+                if (_playing)
+                {
+                    string path = Path.GetFullPath(@"Icons");
+                    var bitmap = new BitmapImage(new Uri(path + "\\play.png", UriKind.Absolute));
+                    playButtonImage.Source = bitmap;
 
-                player.Pause();
-                _playing = false;
-                Title = $"Stop playing: {_shortName}";
-                _timer.Stop();
-            }
-            else
-            {
-                string path = Path.GetFullPath(@"Icons");
-                var bitmap = new BitmapImage(new Uri(path + "\\pause.png", UriKind.Absolute));
-                playButtonImage.Source = bitmap;
+                    player.Pause();
+                    _playing = false;
+                    Title = $"Stop playing: {_shortName}";
+                    _timer.Stop();
+                }
+                else
+                {
+                    string path = Path.GetFullPath(@"Icons");
+                    var bitmap = new BitmapImage(new Uri(path + "\\pause.png", UriKind.Absolute));
+                    playButtonImage.Source = bitmap;
 
-                _playing = true;
-                player.Play();
-                Title = $"Playing: {_shortName}";
-                _timer.Start();
+                    _playing = true;
+                    player.Play();
+                    Title = $"Playing: {_shortName}";
+                    _timer.Start();
+                }
             }
+           
         }
 
         private void stopButton_Click(object sender, RoutedEventArgs e)
@@ -135,6 +171,121 @@ namespace MediaPlayer
         private void player_MediaEnded(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void removePlaylistItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AddItem_Click(object sender, RoutedEventArgs e)
+        {
+            var screen = new OpenFileDialog();
+            screen.Multiselect = true;
+            screen.Filter = "All Media Files|*.wav;*.aac;*.wma;*.wmv;*.avi;*.mpg;*.mpeg;*.m1v;*.mp2;*.mp3;*.mpa;*.mpe;*.m3u;*.mp4;*.mov;*.3g2;*.3gp2;*.3gp;*.3gpp;*.m4a;*.cda;*.aif;*.aifc;*.aiff;*.mid;*.midi;*.rmi;*.mkv;*.WAV;*.AAC;*.WMA;*.WMV;*.AVI;*.MPG;*.MPEG;*.M1V;*.MP2;*.MP3;*.MPA;*.MPE;*.M3U;*.MP4;*.MOV;*.3G2;*.3GP2;*.3GP;*.3GPP;*.M4A;*.CDA;*.AIF;*.AIFC;*.AIFF;*.MID;*.MIDI;*.RMI;*.MKV";
+            
+            if (screen.ShowDialog() == true)
+            {
+                foreach (var file in screen.FileNames)
+                {
+                    PlaylistService.addMediaFile(playlists[curPlayListName], file);
+                    ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists[curPlayListName].Items);
+                }
+            }
+        }
+
+        private void NewPlayList_Click(object sender, RoutedEventArgs e)
+        {
+            var screen = new NewPlaylist();
+            screen.playLists = playlists;
+            screen.Owner = this;
+            if (screen.ShowDialog() == true)
+            {
+                string newPlayListName = screen.NameInput;
+
+                Playlist newPlaylist = new Playlist() { Name = newPlayListName, Items = new List<MediaItem>() };
+                playlists.Add(newPlayListName, newPlaylist);
+
+                _listOfPlaylist.Add(newPlayListName);
+                ListPlaylist.SelectedIndex = ListPlaylist.Items.Count - 1;
+
+                FileService.saveAplayList(newPlaylist);
+                ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, newPlaylist.Items);
+
+            }
+        }
+
+        private void ListPlayList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            string cur = (string)ListPlaylist.SelectedItem;
+          
+            if (cur != null)
+            {
+                curPlayListName = cur;
+                ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists[cur].Items);
+
+            }
+            else
+            {
+                ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists["Recent"].Items);
+                curPlayListName = "Recent";
+            }
+
+            if (curPlayListName == "Recent")
+            {
+                AddNewMediaBtn.IsEnabled = false;
+                DeletePlaylistBtn.IsEnabled = false;
+            }
+            else
+            {
+                AddNewMediaBtn.IsEnabled = true;
+                DeletePlaylistBtn.IsEnabled = true;
+            }
+
+        }
+
+        private void MediaItem_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            MediaItem cur = (MediaItem)ListMediaItem.SelectedItem;
+            if (cur != null)
+            {
+                _currentPlaying = cur.Path;
+
+                this.Title = $"Opened: {_shortName}";
+                player.Source = new Uri(_currentPlaying, UriKind.Absolute);
+
+                _timer = new DispatcherTimer();
+                _timer.Interval = new TimeSpan(0, 0, 0, 1, 0); ;
+                _timer.Tick += _timer_Tick;
+            }
+
+        }
+
+        private void removeMediaItem_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.Button btn = e.Source as System.Windows.Controls.Button;
+            MediaItem item = btn.DataContext as MediaItem;
+
+            playlists[curPlayListName].Items.Remove(item);
+            FileService.saveAplayList(playlists[curPlayListName]);
+            ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists[curPlayListName].Items);
+        }
+
+        private void DeletePlayList_Click(object sender, RoutedEventArgs e)
+        {
+            string location = $@"Playlists\{curPlayListName}.txt";
+
+            playlists.Remove(curPlayListName);
+            _listOfPlaylist.Remove(curPlayListName);
+            ListPlaylist.SelectedIndex = 0;
+
+            if (System.IO.File.Exists(location))
+            {
+                System.IO.File.Delete(location);
+            }
+
+           
         }
     }
 }

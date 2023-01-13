@@ -1,26 +1,113 @@
 {
   "version": 3,
   "targets": {
-    "net6.0-windows7.0": {}
+    "net6.0-windows7.0": {
+      "Fody/6.6.4": {
+        "type": "package",
+        "build": {
+          "build/Fody.targets": {}
+        }
+      },
+      "PropertyChanged.Fody/4.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Fody": "6.6.4"
+        },
+        "compile": {
+          "lib/netstandard2.1/PropertyChanged.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/PropertyChanged.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "build/PropertyChanged.Fody.props": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Fody/6.6.4": {
+      "sha512": "vLZS+oa+ndUHYPlx/8n9bBTT3dHkCF0riml4paKq4D663+cZd47x1uagQo32D/gKFZ/sfmV1oqKaLmH0elxq4A==",
+      "type": "package",
+      "path": "fody/6.6.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "License.txt",
+        "build/Fody.targets",
+        "fody.6.6.4.nupkg.sha512",
+        "fody.nuspec",
+        "netclassictask/Fody.dll",
+        "netclassictask/FodyCommon.dll",
+        "netclassictask/FodyHelpers.dll",
+        "netclassictask/FodyIsolated.dll",
+        "netclassictask/Mono.Cecil.Pdb.dll",
+        "netclassictask/Mono.Cecil.Pdb.pdb",
+        "netclassictask/Mono.Cecil.Rocks.dll",
+        "netclassictask/Mono.Cecil.Rocks.pdb",
+        "netclassictask/Mono.Cecil.dll",
+        "netclassictask/Mono.Cecil.pdb",
+        "netstandardtask/Fody.dll",
+        "netstandardtask/FodyCommon.dll",
+        "netstandardtask/FodyHelpers.dll",
+        "netstandardtask/FodyIsolated.dll",
+        "netstandardtask/Mono.Cecil.Pdb.dll",
+        "netstandardtask/Mono.Cecil.Pdb.pdb",
+        "netstandardtask/Mono.Cecil.Rocks.dll",
+        "netstandardtask/Mono.Cecil.Rocks.pdb",
+        "netstandardtask/Mono.Cecil.dll",
+        "netstandardtask/Mono.Cecil.pdb"
+      ]
+    },
+    "PropertyChanged.Fody/4.1.0": {
+      "sha512": "6v+f9cI8YjnZH2WBHuOqWEAo8DFFNGFIdU8xD3AsL6fhV6Y8oAmVWd7XKk49t8DpeUBwhR/X+97+6Epvek0Y3A==",
+      "type": "package",
+      "path": "propertychanged.fody/4.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "analyzers/dotnet/cs/PropertyChanged.Fody.Analyzer.dll",
+        "build/PropertyChanged.Fody.props",
+        "lib/net40/PropertyChanged.dll",
+        "lib/net40/PropertyChanged.xml",
+        "lib/netstandard2.0/PropertyChanged.dll",
+        "lib/netstandard2.0/PropertyChanged.xml",
+        "lib/netstandard2.1/PropertyChanged.dll",
+        "lib/netstandard2.1/PropertyChanged.xml",
+        "propertychanged.fody.4.1.0.nupkg.sha512",
+        "propertychanged.fody.nuspec",
+        "weaver/PropertyChanged.Fody.dll",
+        "weaver/PropertyChanged.Fody.xcf"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    "net6.0-windows7.0": []
+    "net6.0-windows7.0": [
+      "PropertyChanged.Fody >= 4.1.0"
+    ]
   },
   "packageFolders": {
-    "C:\\Users\\MiHi\\.nuget\\packages\\": {}
+    "C:\\Users\\Tung\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\MediaPlayer.csproj",
+      "projectUniqueName": "D:\\srcC#\\FinalProject\\MediaPlayer\\MediaPlayer.csproj",
       "projectName": "MediaPlayer",
-      "projectPath": "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\MediaPlayer.csproj",
-      "packagesPath": "C:\\Users\\MiHi\\.nuget\\packages\\",
-      "outputPath": "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\obj\\",
+      "projectPath": "D:\\srcC#\\FinalProject\\MediaPlayer\\MediaPlayer.csproj",
+      "packagesPath": "C:\\Users\\Tung\\.nuget\\packages\\",
+      "outputPath": "D:\\srcC#\\FinalProject\\MediaPlayer\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\MiHi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Tung\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -45,6 +132,12 @@
     "frameworks": {
       "net6.0-windows7.0": {
         "targetAlias": "net6.0-windows",
+        "dependencies": {
+          "PropertyChanged.Fody": {
+            "target": "Package",
+            "version": "[4.1.0, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",
