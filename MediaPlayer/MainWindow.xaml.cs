@@ -49,6 +49,9 @@ namespace MediaPlayer
 
         private bool _muted = false;
 
+        private bool autoPLay = false;
+
+        private bool repeat = false;
         private string _shortName
         {
             get
@@ -394,7 +397,10 @@ namespace MediaPlayer
 
                 //this.Title = $"Opened: {_shortName}";
                 player.Source = new Uri(_currentPlaying, UriKind.Absolute);
-
+                if (curPlayListName != "Recent")
+                {
+                    PlaylistService.updateRecentPlayList(playlists["Recent"], cur);
+                }
                 _timer = new DispatcherTimer();
                 _timer.Interval = new TimeSpan(0, 0, 0, 1, 0); ;
                 _timer.Tick += _timer_Tick;
@@ -438,18 +444,22 @@ namespace MediaPlayer
 
         private void shuffleButton_Click(object sender, RoutedEventArgs e)
         {
+         
             string cur = (string)ListPlaylist.SelectedItem;
-            Random random = new Random();
+            if (cur != "Recent")
+            {
+                Random random = new Random();
 
-            if (cur != null)
-            {
-                ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists[cur].Items.OrderBy(x => random.Next()).ToList());
-                ListMediaItem.SelectedIndex = 0;
-            }
-            else
-            {
-                ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists["Recent"].Items.OrderBy(x => random.Next()).ToList());
-                ListMediaItem.SelectedIndex = 0;
+                if (cur != null)
+                {
+                    ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists[cur].Items.OrderBy(x => random.Next()).ToList());
+                    ListMediaItem.SelectedIndex = 0;
+                }
+                else
+                {
+                    ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists["Recent"].Items.OrderBy(x => random.Next()).ToList());
+                    ListMediaItem.SelectedIndex = 0;
+                }
             }
         }
 
@@ -502,6 +512,47 @@ namespace MediaPlayer
         private void nextCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             nextMedia();
+        }
+
+        private void AutoPlay_Click(object sender, RoutedEventArgs e)
+        {
+            autoPLay = !autoPLay;
+            player.MediaEnded += Player_MediaEnded;
+        }
+
+        private void Player_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            if (repeat == true)
+            {
+                _timer = new DispatcherTimer();
+                _timer.Interval = new TimeSpan(0, 0, 0, 1, 0); ;
+                _timer.Tick += _timer_Tick;
+
+                progressSlider.Value = 0;
+                currentPosition.Text = "00:00:00";
+                if (_playing)
+                {
+                    player.Play();
+                    _timer.Start();
+                }
+            }
+            else if (autoPLay == true)
+            {
+                if (ListMediaItem.SelectedIndex != ListMediaItem.Items.Count - 1)
+                {
+                    ListMediaItem.SelectedIndex += 1;
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        private void Repeat_Click(object sender, RoutedEventArgs e)
+        {
+            repeat = !repeat;
+            player.MediaEnded += Player_MediaEnded;
         }
     }
 }

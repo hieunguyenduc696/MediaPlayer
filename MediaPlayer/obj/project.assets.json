@@ -91,19 +91,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\MiHi\\.nuget\\packages\\": {}
+    "C:\\Users\\Tung\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\MediaPlayer.csproj",
+      "projectUniqueName": "C:\\Users\\Tung\\Desktop\\Term7\\Windows\\Final\\MediaPlayer\\MediaPlayer.csproj",
       "projectName": "MediaPlayer",
-      "projectPath": "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\MediaPlayer.csproj",
-      "packagesPath": "C:\\Users\\MiHi\\.nuget\\packages\\",
-      "outputPath": "D:\\Code\\Study\\22_23_HKI\\Window\\project_2\\MediaPlayer\\MediaPlayer\\obj\\",
+      "projectPath": "C:\\Users\\Tung\\Desktop\\Term7\\Windows\\Final\\MediaPlayer\\MediaPlayer.csproj",
+      "packagesPath": "C:\\Users\\Tung\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Tung\\Desktop\\Term7\\Windows\\Final\\MediaPlayer\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\MiHi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Tung\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

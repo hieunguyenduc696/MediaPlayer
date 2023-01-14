@@ -77,6 +77,8 @@
                                 <Button x:Name="shuffleButton" Click="shuffleButton_Click" Style="{StaticResource mediaButton}" ToolTip="Shuffle">
                                     <Image x:Name="shuffleButtonImage" Source="/Icons/shuffle.png"/>
                                 </Button>
+                                <Button Width="50" Click="AutoPlay_Click">Auto Play</Button>
+                                <Button Width="50" Click="Repeat_Click">Repeat</Button>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button x:Name="prevButton" Click="prevButton_Click" Style="{StaticResource mediaButton}" ToolTip="Previous (Ctrl + Left)">
@@ -157,6 +159,7 @@
                         SelectionChanged="MediaItem_Changed"
                         Background="Transparent"
                         BorderThickness="0"
+                        
                     >
                         <ListView.ItemTemplate>
                             <DataTemplate>

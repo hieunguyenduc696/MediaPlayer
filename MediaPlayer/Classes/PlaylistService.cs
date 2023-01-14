@@ -63,5 +63,19 @@ namespace MediaPlayer.Classes
 
             return new Status(true, "");
         }
+
+        public static void updateRecentPlayList(Playlist recent, MediaItem newItem)
+        {
+            if (recent.Items.Count == 15)
+            {
+                recent.Items.RemoveAt(0);
+                recent.Items.Add(newItem);
+            }
+            else
+            {
+                recent.Items.Add(newItem);
+            }
+            FileService.saveAplayList(recent);
+        }
     }
 }
