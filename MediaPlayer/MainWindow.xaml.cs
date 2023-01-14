@@ -49,9 +49,10 @@ namespace MediaPlayer
 
         private bool _muted = false;
 
-        private bool autoPLay = false;
+        private bool autoPLay = true;
 
         private bool repeat = false;
+
         private string _shortName
         {
             get
@@ -109,8 +110,12 @@ namespace MediaPlayer
             nextButtonImage.Source = bitmapNext;
             var bitmapVolume = new BitmapImage(new Uri(path + "\\volume.png", UriKind.Absolute));
             volumeButtonImage.Source = bitmapVolume;
+            var bitmapAutoplay = new BitmapImage(new Uri(path + "\\autoplay.png", UriKind.Absolute));
+            autoplayButtonImage.Source = bitmapAutoplay;
             var bitmapShuffle = new BitmapImage(new Uri(path + "\\shuffle.png", UriKind.Absolute));
             shuffleButtonImage.Source = bitmapShuffle;
+            var bitmapRepeat = new BitmapImage(new Uri(path + "\\repeat.png", UriKind.Absolute));
+            repeatButtonImage.Source = bitmapRepeat;
             var bitmapAddPlaylist = new BitmapImage(new Uri(path + "\\add_playlist.png", UriKind.Absolute));
             addPlaylistButtonImage.Source = bitmapAddPlaylist;
             var bitmapAddMedia = new BitmapImage(new Uri(path + "\\add_media.png", UriKind.Absolute));
@@ -153,6 +158,7 @@ namespace MediaPlayer
                 if (minutes.Length == 1) minutes = "0" + minutes;
                 if (seconds.Length == 1) seconds = "0" + seconds;
                 currentPosition.Text = $"{hours}:{minutes}:{seconds}";
+                progressSlider.Value = player.Position.TotalSeconds;
             }
         }
 
@@ -168,7 +174,6 @@ namespace MediaPlayer
                     playButton.ToolTip = "Play (k)";
                     player.Pause();
                     _playing = false;
-                    //Title = $"Stop playing: {_shortName}";
                     _timer.Stop();
                 }
                 else
@@ -179,7 +184,6 @@ namespace MediaPlayer
                     playButton.ToolTip = "Pause (k)";
                     _playing = true;
                     player.Play();
-                    //Title = $"Playing: {_shortName}";
                     _timer.Start();
                 }
             }
@@ -207,7 +211,30 @@ namespace MediaPlayer
 
         private void player_MediaEnded(object sender, RoutedEventArgs e)
         {
+            if (repeat == true)
+            {
+                _timer = new DispatcherTimer();
+                _timer.Interval = new TimeSpan(0, 0, 0, 1, 0); ;
+                _timer.Tick += _timer_Tick;
 
+                progressSlider.Value = 0;
+                currentPosition.Text = "00:00:00";
+                if (_playing)
+                {
+                    player.Play();
+                    _timer.Start();
+                }
+            }
+            else
+            {
+                if (autoPLay == true)
+                {
+                    if (ListMediaItem.SelectedIndex != ListMediaItem.Items.Count - 1)
+                    {
+                        ListMediaItem.SelectedIndex += 1;
+                    }
+                }
+            }
         }
 
         private void progressSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -395,7 +422,6 @@ namespace MediaPlayer
             {
                 _currentPlaying = cur.Path;
 
-                //this.Title = $"Opened: {_shortName}";
                 player.Source = new Uri(_currentPlaying, UriKind.Absolute);
                 if (curPlayListName != "Recent")
                 {
@@ -444,7 +470,6 @@ namespace MediaPlayer
 
         private void shuffleButton_Click(object sender, RoutedEventArgs e)
         {
-         
             string cur = (string)ListPlaylist.SelectedItem;
             if (cur != "Recent")
             {
@@ -516,43 +541,34 @@ namespace MediaPlayer
 
         private void AutoPlay_Click(object sender, RoutedEventArgs e)
         {
-            autoPLay = !autoPLay;
-            player.MediaEnded += Player_MediaEnded;
-        }
-
-        private void Player_MediaEnded(object sender, RoutedEventArgs e)
-        {
-            if (repeat == true)
+            string path = Path.GetFullPath(@"Icons");
+            if (autoPLay)
             {
-                _timer = new DispatcherTimer();
-                _timer.Interval = new TimeSpan(0, 0, 0, 1, 0); ;
-                _timer.Tick += _timer_Tick;
-
-                progressSlider.Value = 0;
-                currentPosition.Text = "00:00:00";
-                if (_playing)
-                {
-                    player.Play();
-                    _timer.Start();
-                }
-            }
-            else if (autoPLay == true)
-            {
-                if (ListMediaItem.SelectedIndex != ListMediaItem.Items.Count - 1)
-                {
-                    ListMediaItem.SelectedIndex += 1;
-                }
+                var bitmap = new BitmapImage(new Uri(path + "\\autoplay_off.png", UriKind.Absolute));
+                autoplayButtonImage.Source = bitmap;
             }
             else
             {
-
+                var bitmap = new BitmapImage(new Uri(path + "\\autoplay.png", UriKind.Absolute));
+                autoplayButtonImage.Source = bitmap;
             }
+            autoPLay = !autoPLay;
         }
 
         private void Repeat_Click(object sender, RoutedEventArgs e)
         {
+            string path = Path.GetFullPath(@"Icons");
+            if (repeat)
+            {
+                var bitmap = new BitmapImage(new Uri(path + "\\repeat.png", UriKind.Absolute));
+                repeatButtonImage.Source = bitmap;
+            }
+            else
+            {
+                var bitmap = new BitmapImage(new Uri(path + "\\repeat_on.png", UriKind.Absolute));
+                repeatButtonImage.Source = bitmap;
+            }
             repeat = !repeat;
-            player.MediaEnded += Player_MediaEnded;
         }
     }
 }

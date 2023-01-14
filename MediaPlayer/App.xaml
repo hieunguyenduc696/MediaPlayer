@@ -53,6 +53,69 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="autoplayButton" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="20" Padding="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border CornerRadius="20" Opacity="0.85" Padding="5">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="repeatButton" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="20" Padding="7">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border CornerRadius="20" Background="#2a213a" Padding="7">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="mediaButton" TargetType="Button">
             <Setter Property="Height" Value="40"/>
             <Setter Property="Width" Value="40"/>
@@ -88,7 +151,6 @@
         <Style x:Key="mediaButtonSmall" TargetType="Button">
             <Setter Property="Height" Value="30"/>
             <Setter Property="Width" Value="30"/>
-            <Setter Property="Padding" Value="2"/>
             <Setter Property="Margin" Value="2"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -179,10 +241,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
-        <!--<Style>
-            <Setter Property=""
-        </Style>-->
 
         <!--slider style-->
         

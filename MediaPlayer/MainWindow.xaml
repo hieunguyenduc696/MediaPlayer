@@ -36,13 +36,9 @@
         </Border.Background>
         <Grid>
             <Grid.ColumnDefinitions>
-                <!--<ColumnDefinition Width="75" />-->
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
-            <!--<Border Grid.Column="0" Background="#34224f" Opacity="0.7" Style="{StaticResource card}">
-                <TextBlock>hello</TextBlock>
-            </Border>-->
             <DockPanel Grid.Column="0">
                 <Border DockPanel.Dock="Bottom" Background="#34224f" Opacity="0.7" Height="115" Style="{StaticResource card}">
                     <StackPanel>
@@ -69,18 +65,23 @@
 
                         <Grid Margin="5">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="75*" />
+                                <ColumnDefinition Width="103*"/>
+                                <ColumnDefinition Width="355*" />
+                                <ColumnDefinition Width="178*" />
                             </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Grid.ColumnSpan="3">
+                                <Button x:Name="autoplayButton" Click="AutoPlay_Click" Style="{StaticResource autoplayButton}">
+                                    <Image x:Name="autoplayButtonImage" Source="/Icons/autoplay.png"/>
+                                </Button>
                                 <Button x:Name="shuffleButton" Click="shuffleButton_Click" Style="{StaticResource mediaButton}" ToolTip="Shuffle">
                                     <Image x:Name="shuffleButtonImage" Source="/Icons/shuffle.png"/>
                                 </Button>
-                                <Button Width="50" Click="AutoPlay_Click">Auto Play</Button>
-                                <Button Width="50" Click="Repeat_Click">Repeat</Button>
+                                <Button x:Name="repeatButton" Click="Repeat_Click" Style="{StaticResource repeatButton}">
+                                    <Image x:Name="repeatButtonImage" Source="/Icons/repeat.png"/>
+                                </Button>
                             </StackPanel>
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button x:Name="prevButton" Click="prevButton_Click" Style="{StaticResource mediaButton}" ToolTip="Previous (Ctrl + Left)">
                                     <Image x:Name="prevButtonImage" Source="/Icons/prev.png"/>
                                 </Button>
@@ -91,7 +92,7 @@
                                     <Image x:Name="nextButtonImage" Source="/Icons/next.png"/>
                                 </Button>
                             </StackPanel>
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                                 <Button
                                     x:Name="volumeButton"
                                     Style="{StaticResource mediaButtonSmall}"
@@ -125,16 +126,13 @@
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Top">
                         <DockPanel Margin="3">
-                            <!--<Button x:Name="browseButon" Width="80" Height="35" Content="Browse..." Click="browse_Click" HorizontalAlignment="Left" VerticalAlignment="Top"></Button>-->
                             <Button DockPanel.Dock="Right" Click="NewPlayList_Click" Style="{StaticResource mediaButton}" Margin="0" ToolTip="New playlist">
                                 <Image x:Name="addPlaylistButtonImage" Source="/Icons/add_playlist.png"/>
                             </Button>
                             <TextBlock Padding="5 5 5 5" FontSize="18" Foreground="White" VerticalAlignment="Center">Your playlists</TextBlock>
                         </DockPanel>
-                        
-                        <DockPanel Margin="3">
-                            <!--<TextBlock Padding="5 5 5 5">Your playlists</TextBlock>-->
 
+                        <DockPanel Margin="3">
                             <StackPanel DockPanel.Dock="Right" Name="UtilPanel" Orientation="Horizontal">
                                 <Button Name="AddNewMediaBtn" Click="AddItem_Click" Style="{StaticResource mediaButtonSmall}" ToolTip="Add file">
                                     <Image x:Name="addMediaButtonImage" Source="/Icons/add_media.png"/>
@@ -166,7 +164,6 @@
                                 <Border Background="#2a213a" CornerRadius="5" Margin="0 2 0 2">
                                     <DockPanel>
                                         <Button DockPanel.Dock="Right" Click="removeMediaItem_Click" Style="{StaticResource mediaButtonTiny}" ToolTip="Remove">
-                                            <!--<Image x:Name="deleteMediaButtonImage" Source="Icons/delete.png"/>-->
                                             x
                                         </Button>
                                         <TextBlock Text="{Binding Name}" Foreground="White" FontSize="16" Margin="5">
