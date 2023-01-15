@@ -53,6 +53,12 @@ namespace MediaPlayer
 
         private bool repeat = false;
 
+        private bool shuffle = false;
+
+        private Random random = new Random();
+
+        private List<int> historyIndex = new List<int>();
+
         private string _shortName
         {
             get
@@ -229,9 +235,26 @@ namespace MediaPlayer
             {
                 if (autoPLay == true)
                 {
-                    if (ListMediaItem.SelectedIndex != ListMediaItem.Items.Count - 1)
+                    if (shuffle)
                     {
-                        ListMediaItem.SelectedIndex += 1;
+                        if (historyIndex.Count == ListMediaItem.Items.Count)
+                        {
+                            historyIndex = new List<int>();
+                        }
+                        int index = random.Next(0, ListMediaItem.Items.Count);
+                        while (historyIndex.Contains(index))
+                        {
+                            index = random.Next(0, ListMediaItem.Items.Count);
+                        }
+                        ListMediaItem.SelectedIndex = index;
+                        historyIndex.Add(index);
+                    }
+                    else
+                    {
+                        if (ListMediaItem.SelectedIndex != ListMediaItem.Items.Count - 1)
+                        {
+                            ListMediaItem.SelectedIndex += 1;
+                        }
                     }
                 }
             }
@@ -413,6 +436,11 @@ namespace MediaPlayer
                 DeletePlaylistBtn.IsEnabled = true;
             }
 
+            player.Pause();
+            _timer = new DispatcherTimer();
+            currentPosition.Text = "00:00:00";
+            totalPosition.Text = "00:00:00";
+            historyIndex = new List<int>();
         }
 
         private void MediaItem_Changed(object sender, SelectionChangedEventArgs e)
@@ -470,37 +498,94 @@ namespace MediaPlayer
 
         private void shuffleButton_Click(object sender, RoutedEventArgs e)
         {
-            string cur = (string)ListPlaylist.SelectedItem;
-            if (cur != "Recent")
+            string path = Path.GetFullPath(@"Icons");
+            if (shuffle)
             {
-                Random random = new Random();
-
-                if (cur != null)
+                var bitmap = new BitmapImage(new Uri(path + "\\shuffle.png", UriKind.Absolute));
+                shuffleButtonImage.Source = bitmap;
+                historyIndex = new List<int>();
+            }
+            else
+            {
+                var bitmap = new BitmapImage(new Uri(path + "\\shuffle_on.png", UriKind.Absolute));
+                shuffleButtonImage.Source = bitmap;
+                if (!_playing)
                 {
-                    ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists[cur].Items.OrderBy(x => random.Next()).ToList());
-                    ListMediaItem.SelectedIndex = 0;
-                }
-                else
-                {
-                    ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists["Recent"].Items.OrderBy(x => random.Next()).ToList());
-                    ListMediaItem.SelectedIndex = 0;
+                    int index = random.Next(0, ListMediaItem.Items.Count);
+                    ListMediaItem.SelectedIndex = index;
+                    historyIndex.Add(index);
                 }
             }
+            shuffle = !shuffle;
+            //string cur = (string)ListPlaylist.SelectedItem;
+            //if (cur != "Recent")
+            //{
+            //    Random random = new Random();
+
+            //    if (cur != null)
+            //    {
+            //        ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists[cur].Items.OrderBy(x => random.Next()).ToList());
+            //        ListMediaItem.SelectedIndex = 0;
+            //    }
+            //    else
+            //    {
+            //        ViewUtils.updateListMediaView(ListMediaItem, _workingMediaItems, playlists["Recent"].Items.OrderBy(x => random.Next()).ToList());
+            //        ListMediaItem.SelectedIndex = 0;
+            //    }
+            //}
         }
 
         private void prevMedia()
         {
-            int index = ListMediaItem.SelectedIndex - 1;
-            if (index < 0) return;
-            ListMediaItem.SelectedIndex = index;
+            if (shuffle)
+            {
+                int index = historyIndex.IndexOf(ListMediaItem.SelectedIndex) - 1;
+                if (index > -1)
+                {
+                    ListMediaItem.SelectedIndex = historyIndex[index];
+                    Title = $"{ListMediaItem.SelectedIndex}";
+                }
+            }
+            else
+            {
+                int index = ListMediaItem.SelectedIndex - 1;
+                if (index < 0) return;
+                ListMediaItem.SelectedIndex = index;
+            }
         }
 
         private void nextMedia()
         {
-            int length = ListMediaItem.Items.Count;
-            int index = ListMediaItem.SelectedIndex + 1;
-            if (index == length) return;
-            ListMediaItem.SelectedIndex = index;
+            if (shuffle)
+            {
+                int hIndex = historyIndex.IndexOf(ListMediaItem.SelectedIndex) + 1;
+                if (hIndex < historyIndex.Count)
+                {
+                    ListMediaItem.SelectedIndex = historyIndex[hIndex];
+                }
+                else
+                {
+                    if (historyIndex.Count == ListMediaItem.Items.Count)
+                    {
+                        historyIndex = new List<int>();
+                    }
+                    int index = random.Next(0, ListMediaItem.Items.Count);
+                    while (historyIndex.Contains(index))
+                    {
+                        index = random.Next(0, ListMediaItem.Items.Count);
+                    }
+                    ListMediaItem.SelectedIndex = index;
+                    historyIndex.Add(index);
+                }
+                Title = $"{ListMediaItem.SelectedIndex}";
+            }
+            else
+            {
+                int length = ListMediaItem.Items.Count;
+                int index = ListMediaItem.SelectedIndex + 1;
+                if (index == length) return;
+                ListMediaItem.SelectedIndex = index;
+            }
         }
 
         private void prevButton_Click(object sender, RoutedEventArgs e)

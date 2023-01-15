@@ -59,6 +59,9 @@
     <None Update="Icons\shuffle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Icons\shuffle_on.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Icons\trash_bin.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
